@@ -2,9 +2,10 @@ import csv
 import pymc as pm
 import numpy as np
 
-file = open("trafic.csv", "r")
-trafic_data = [int(x[1]) for x in list(csv.reader(file, delimiter=','))[1:]]
-file.close()
+#Reads the csv file
+file_reader = open("trafic.csv", "r")
+trafic_data = [int(x[1]) for x in list(csv.reader(file_reader, delimiter=','))[1:]]
+file_reader.close()
 
 with pm.Model() as model:
     alpha = 1.0/np.mean(trafic_data)
