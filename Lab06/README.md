@@ -1,0 +1,4 @@
+- Distributia va fi mai aproape de o valoare mai mare, cu cat Y este mai mare
+- Daca Y este mai mic, distributia se va apropia de o valoare mai mica
+- Daca θ este mai mare, numarul de clienti care vor cumpara va fi mai mic
+- cu cat θ este mai mic, numarul de clienti va fi mai mare
