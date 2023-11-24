@@ -29,6 +29,7 @@ model.add_cpds(cpd_J, cpd_R1, cpd_R2)
 
 assert model.check_model()
 
+#3
 infer = VariableElimination(model)
 result = infer.query(variables=['J'], evidence={'R2': 1})
 print(result)
