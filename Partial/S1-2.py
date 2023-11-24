@@ -4,26 +4,39 @@ from pgmpy.inference import VariableElimination
 import matplotlib.pyplot as plt
 import networkx as nx
 
-# Definirea rețelei
-model = BayesianNetwork([('Jucator', 'Stema0'), ('Jucator', 'Stema1'), ('Stema0', 'Castig')])
+# J - primul jucator
+# R1 - prima runda
+# R2 - a doua runda
+# C - castigator
 
-# Definirea Tabelului CPD pentru Jucator
-cpd_jucator = TabularCPD(variable='Jucator', variable_card=2, values=[[0.5, 0.5]])
+model = BayesianNetwork([('J', 'R1'), ('J', 'R2'), ('R1', 'R2'), ('R1', 'C'), ('R2', 'C')])
 
-# Definirea Tabelului CPD pentru Stema0
-cpd_stema0 = TabularCPD(variable='Stema0', variable_card=2, values=[[0.5, 0.5]])
+cpd_J = TabularCPD(variable='J', variable_card=2, values=[[0.5], [0.5]])
 
-# Definirea Tabelului CPD pentru Stema1 în funcție de Jucator și Stema0
-cpd_stema1 = TabularCPD(variable='Stema1', variable_card=2, evidence=['Jucator', 'Stema0'],
-                        evidence_card=[2, 2], values=[[2/3, 1/3, 0.5, 0.5]])
+cpd_R1 = TabularCPD(variable='R1', variable_card=2,
+                    values=[[0.5, 1/3],
+                            [0.5, 2/3]],
+                    evidence=['J'],
+                    evidence_card=[2])
 
-# Definirea Tabelului CPD pentru Castig în funcție de Stema0 și Stema1
-cpd_castig = TabularCPD(variable='Castig', variable_card=2, evidence=['Stema0', 'Stema1'],
-                        evidence_card=[2, 2], values=[[1, 0, 0, 1], [0, 1, 1, 0]])
+cpd_R2 = TabularCPD(variable='R2', variable_card=3,
+                    values=[[1/3,   0.5,    0.25, ],
+                            [2/3,   0.5,    0.5, ],
+                            [0,     0,      0.25, ]],
+                    evidence=['J', 'R1'],
+                    evidence_card=[2, 2])
 
-# Adăugarea CPD-urilor la model
-model.add_cpds(cpd_jucator, cpd_stema0, cpd_stema1, cpd_castig)
 
-# Desenarea rețelei
-nx.draw(model, with_labels=True, font_weight='bold')
-plt.show()
+cpd_c = TabularCPD(variable='C', variable_card=2, values=[[0.9995], [0.0005]]) # C=0 cutremurul nu are loc, C=1 invers
+
+cpd_i = TabularCPD(variable='I', variable_card=2,
+                   values=[[0.99, 0.97],
+                           [0.01, 0.03]],
+                    evidence=['C'],
+                    evidence_card=[2]) # I=0 incendiul nu are loc, I=1 invers
+
+cpd_a = TabularCPD(variable='A', variable_card=2,
+                   values=[[0.9999, 0.98, 0.05, 0.02],
+                           [0.0001, 0.02, 0.95, 0.98]],
+                    evidence=['C', 'I'],
+                    evidence_card=[2, 2]) # A=0 ialarma nu se declanseaza, A=1 invers 
