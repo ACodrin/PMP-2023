@@ -39,7 +39,7 @@ def plot_scatter_with_hdi(idata, x, admission):
 
 def main():
     admission, x = import_data("Lab09/Admission.csv")
-    rng = np.random.default_rng(100)  # Define rng within the main function
+    rng = np.random.default_rng(100)
 
     with pm.Model() as model_1:
         beta0 = pm.Normal('β0', mu=0, sigma=10)
