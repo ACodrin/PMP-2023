@@ -26,10 +26,11 @@ def main():
     x_Age = (x_Age-x_Age_mean)/x_Age_std
     X = np.column_stack((x_Pclass, x_Age))
 
+    #Definirea modelului
     with pm.Model() as surv_model:
         alpha = pm.Normal("alpha", mu=0, sigma=10)
         beta = pm.Normal("beta", mu=0, sigma=1, shape = 2)
-        X_shared = pm.MutableData('x_shared',X)
+        X_shared = pm.MutableData('x_shared', X)
         mu = pm.Deterministic('μ',alpha + pm.math.dot(X_shared, beta))
         theta = pm.Deterministic("theta", pm.math.sigmoid(mu))
         bd = pm.Deterministic("bd", -alpha/beta[1] - beta[0]/beta[1] * x_Pclass)
